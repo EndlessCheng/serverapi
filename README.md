@@ -9,7 +9,8 @@
 5. 运行脚本startserver.sh或执行python manage.py runserver 0.0.0.0:8000(推荐执行startserver.sh)
 6. 退出用ctrl+c
 
-### 架构设计、简洁开发流程参见Wiki  
+### 架构设计、编码规范、简洁开发流程等参见Wiki  
+[WIKI](https://github.com/carpaanddonkey/serverapi/wiki)
 [ServerAPI顺道儿服务架构设计](https://github.com/carpaanddonkey/serverapi/wiki/ServerAPI顺道儿服务架构设计)
 
-@ByWay 顺道儿
+@ByWay 
