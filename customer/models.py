@@ -8,10 +8,12 @@ class Customer(models.Model):
 	name = models.CharField(max_length=50)
 	password = models.CharField(max_length=50)
 	score = models.IntegerField(default=0)
+	status = models.IntegerField(default=0)
 
 	def signup_customer(self):
-		check_customer = self.get_customer_by_mail()
-		if check_customer is None:
+		customer_by_mail = self.get_customer_by_mail()
+		customer_by_phone = self.get_customer_by_phone()
+		if customer_by_mail is None and customer_by_phone is None:
 			self.save()
 			return True
 		else:
@@ -24,5 +26,20 @@ class Customer(models.Model):
 			return None
 		else:
 			return customer
+
+	def get_customer_by_phone(self):
+		try:
+			customer = Customer.objects.get(phone=self.phone)
+		except Exception, e:
+			return None
+		else:
+			return customer
+
+	def to_dict(self):
+		customer_dict = dict()
+		customer_dict['name'] = self.name
+		customer_dict['mail'] = self.mail
+		customer_dict['phone'] = self.phone
+		return customer_dict
 
 
