@@ -10,7 +10,7 @@
 6. 退出用ctrl+c
 
 ### 架构设计、编码规范、简洁开发流程等参见Wiki  
-[WIKI](https://github.com/carpaanddonkey/serverapi/wiki)
+[Serverapi WIKI](https://github.com/carpaanddonkey/serverapi/wiki)  
 [ServerAPI顺道儿服务架构设计](https://github.com/carpaanddonkey/serverapi/wiki/ServerAPI顺道儿服务架构设计)
 
 @ByWay 
