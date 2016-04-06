@@ -1,7 +1,10 @@
-from core.jsonresponse import *
+from django.http import HttpResponse
+
+BASE_PATH = r'api.shundaoer.top/v1/'
 
 
-def create_data_response(data):
-	response = create_response(200)
-	response.data = data
-	return response.get_response()
+def create_simple_response(code, content):
+	response = HttpResponse()
+	response.status_code = code
+	response.content = content
+	return response

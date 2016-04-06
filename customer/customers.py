@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+import json
 
 from util.response_util import *
 from models import Customer
+from core.jsonresponse import *
 
 
 def customer(request):
@@ -20,9 +22,8 @@ def post_customer(request):
 	data = dict()
 
 	if mail is None or password is None or phone is None:
-		data['status'] = 0
-		data['msg'] = u'信息缺失'
-		return create_data_response(data)
+		data = u'信息缺失'
+		return create_response(422, data)
 
 	new_customer = Customer()
 	new_customer.mail = mail
@@ -31,12 +32,22 @@ def post_customer(request):
 	if_signed = new_customer.signup_customer()
 
 	if if_signed:
-		data['status'] = 1
-		data['msg'] = u'注册成功'
-		data['customer'] = new_customer.to_dict()
+		content = dict()
+		content['status'] = 201
+		content['msg'] = u'注册成功,请登录邮箱进行验证'
+		content['href'] = '%s%s%s' % (BASE_PATH, 'customers/', str(new_customer.id))
 
-		return create_data_response(data)
+		return create_simple_response(201, json.dumps(content))
 	else:
-		data['status'] = 0
-		data['msg'] = u'注册失败'
-		return create_data_response(data)
+		content = dict()
+		content['status'] = 422
+		content['msg'] = u'注册失败'
+		return create_simple_response(422, json.dumps(content))
+
+
+# 邮件验证CUSTOMER
+# （提供该CUSTOMER的全部信息）
+def put_customer(request):
+	pass
+	# customer_id = request.GET.get('customer_id')
+	# verify_token = request.GET.get('verify_code')

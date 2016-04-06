@@ -81,6 +81,7 @@ class JsonResponse(dict):
 def decode_json_str(str):
 	return json.loads(str)
 
+
 def create_response_from_json_str(json_str):
 	if not json_str:
 		return JsonResponse()
@@ -101,20 +102,14 @@ def create_response_from_json_str(json_str):
 		response.data = JsonResponse()
 	return response
 
-def create_response(code, msg=None):
-	"""
-	创建json响应对象
 
-	对webapp添加msg参数支持，可以直接返回get_response()结果
-	"""
+def create_response(code, msg=None):
 	response = JsonResponse()
 	response.code = code
-	response.errMsg = ""
-	response.innerErrMsg = ""
 	if code == 200:
 		response.success = True
 	if msg:
-		response.data = { 'msg' : msg }
+		response.message = msg
 		return response.get_response()
 	response.data = JsonResponse()
 	return response

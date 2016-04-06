@@ -8,6 +8,7 @@ class Customer(models.Model):
 	name = models.CharField(max_length=50)
 	password = models.CharField(max_length=50)
 	score = models.IntegerField(default=0)
+	token = models.CharField(max_length=255, null=True)
 	status = models.IntegerField(default=0)
 
 	def signup_customer(self):

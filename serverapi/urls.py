@@ -5,6 +5,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 from customer.customers import *
+from customer.views import *
 admin.autodiscover()
 
 urlpatterns = patterns('',
