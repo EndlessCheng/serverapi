@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 
+BASE_SCHEMES = r'http://'
 BASE_PATH = r'api.shundaoer.top/v1/'
 
 

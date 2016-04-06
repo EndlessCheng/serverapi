@@ -2,8 +2,12 @@
 import json
 
 from util.response_util import *
+from util.general_util import *
+from util.email_util import *
 from models import Customer
 from core.jsonresponse import *
+
+reg_subject = u'[顺道儿]邮件验证'
 
 
 def customer(request):
@@ -22,22 +26,33 @@ def post_customer(request):
 	data = dict()
 
 	if mail is None or password is None or phone is None:
-		data = u'信息缺失'
-		return create_response(422, data)
+		content = dict()
+		content['status'] = 422
+		content['msg'] = u'信息缺失'
+		return create_simple_response(422, json.dumps(content))
 
 	new_customer = Customer()
 	new_customer.mail = mail
 	new_customer.phone = phone
 	new_customer.password = password
+	new_customer.token = generate_token()
 	if_signed = new_customer.signup_customer()
 
 	if if_signed:
 		content = dict()
-		content['status'] = 201
-		content['msg'] = u'注册成功,请登录邮箱进行验证'
-		content['href'] = '%s%s%s' % (BASE_PATH, 'customers/', str(new_customer.id))
-
-		return create_simple_response(201, json.dumps(content))
+		try:
+			query_str = 'customers/'+str(new_customer.id)+'?validate=true&token='+new_customer.token
+			reg_msg = u'感谢您注册顺道儿,请点击链接完成验证: <a href="%s%s%s">- 验证 GO -</a>'%(BASE_SCHEMES, BASE_PATH, query_str)
+			send_register_email(new_customer.mail, reg_msg, reg_subject)
+		except:
+			content['status'] = 422
+			content['msg'] = u'验证失败'
+		else:
+			content['status'] = 201
+			content['msg'] = u'注册成功,请登录邮箱进行验证'
+			content['href'] = '%s%s%s' % (BASE_PATH, 'customers/', str(new_customer.id))
+		finally:
+			return create_simple_response(201, json.dumps(content))
 	else:
 		content = dict()
 		content['status'] = 422
