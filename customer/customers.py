@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 
+from django.db.models import Q
+
 from util.response_util import *
 from util.general_util import *
 from util.email_util import *
@@ -10,11 +12,32 @@ from core.jsonresponse import *
 reg_subject = u'[顺道儿]邮件验证'
 
 
-def customer(request):
+def customer(request, customer_id):
 	if request.method == 'POST':
 		return post_customer(request)
 	elif request.method == 'GET':
-		pass
+		return get_customer(request, customer_id)
+
+
+def get_customer(request, customer_id):
+	content = dict()
+	customer = None
+	# print('>>>>'+(customer_id))
+	try:
+		customer = Customer.objects.get(id=int(customer_id))
+		if request.GET.get('validate', None) == 'true':
+			validate_token = request.GET.get('token', None)
+			Customer.objects.filter(id=int(customer_id), token=validate_token).update(status=1)
+			content['status'] = 201
+			content['msg'] = u'验证成功'
+			return create_simple_response(201, json.dumps(content))
+	except:
+		content['status'] = 404
+		content['msg'] = '未找到'
+		return create_simple_response(404, json.dumps(content))
+	else:
+		content = customer.to_dict()
+		return create_simple_response(200, json.dumps(content))
 
 
 def post_customer(request):
@@ -22,8 +45,6 @@ def post_customer(request):
 	mail = customer_data.get('mail', None)
 	phone = customer_data.get('phone', None)
 	password = customer_data.get('password', None)
-
-	data = dict()
 
 	if mail is None or password is None or phone is None:
 		content = dict()

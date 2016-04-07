@@ -41,6 +41,9 @@ class Customer(models.Model):
 		customer_dict['name'] = self.name
 		customer_dict['mail'] = self.mail
 		customer_dict['phone'] = self.phone
+		customer_dict['score'] = self.score
+		customer_dict['token'] = self.token
+		customer_dict['status'] = self.status
 		return customer_dict
 
 
