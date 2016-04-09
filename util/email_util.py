@@ -5,10 +5,10 @@ from email.mime.text import MIMEText
 from email.utils import parseaddr, formataddr
 import smtplib
 
-from_addr = '18813090635@163.com'
-password = 'yan123456'
+from_addr = 'bywayadm@sina.com'
+password = 'shundaoer'
 # to_addr = '386670057@qq.com'
-smtp_server = 'smtp.163.com'
+smtp_server = 'smtp.sina.com'
 
 
 def _format_addr(s):

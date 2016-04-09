@@ -12,14 +12,14 @@ from core.jsonresponse import *
 reg_subject = u'[顺道儿]邮件验证'
 
 
-def customer(request, customer_id):
+def customer(request, customer_id=None):
 	if request.method == 'POST':
 		return post_customer(request)
 	elif request.method == 'GET':
 		return get_customer(request, customer_id)
 
 
-def get_customer(request, customer_id):
+def get_customer(request, customer_id=None):
 	content = dict()
 	customer = None
 	# print('>>>>'+(customer_id))
