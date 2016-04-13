@@ -1,6 +1,7 @@
 import unittest
 import urllib
 import urllib2
+import json
 
 
 class TestOrders(unittest.TestCase):
@@ -20,8 +21,12 @@ class TestOrders(unittest.TestCase):
 
     def testOrder(self):
         self.req = urllib2.Request(url=self.requrl, data=self.test_data_urlencode)
-        self.code = urllib2.urlopen(self.req).getcode()
+        self.response = urllib2.urlopen(self.req)
+        self.code = self.response.getcode()
+        self.response = json.loads(self.response.read())
         self.assert_(201, self.code, "正常下单未返回正常值")
+        self.assert_(201, self.response["status"], "正常下单未返回正常值")
+        self.assert_("下单成功", self.response["msg"], "正常下单未返回msg")
 
 if __name__ == '__main__':
     unittest.main()
