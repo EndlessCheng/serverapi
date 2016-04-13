@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
-
-from django.db.models import Q
 
 from util.response_util import *
 from util.general_util import *
