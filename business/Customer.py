@@ -1,2 +1,2 @@
-from users.models import Customer
+from customers.models import Customer
 

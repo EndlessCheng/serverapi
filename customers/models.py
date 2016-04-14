@@ -47,3 +47,8 @@ class Customer(models.Model):
 		return customer_dict
 
 
+class Ship(models.Model):
+	customer_id = models.ForeignKey(Customer)
+	dormitory_no = models.IntegerField(default=0)
+	room_no = models.IntegerField(default=0)
+	address = models.CharField(max_length=255, default='')
