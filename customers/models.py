@@ -3,6 +3,10 @@ from django.db import models
 
 ISOTIMEFORMAT = '%Y-%m-%d %X'
 
+HTTP_SCHEMA = 'http://'
+HOST_URL = 'api.byway.net.cn'
+API_VERSION = 'v1'
+
 
 # Create your models here.
 class Customer(models.Model):

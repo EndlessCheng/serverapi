@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from django.forms.models import model_to_dict
+
 from canteens.models import *
+from util.qr_util import *
 
 # Create your models here.
 
@@ -10,7 +13,8 @@ ORDER_WAITING = 2
 ORDER_RECEIVED = 3
 ORDER_PUSHED = 4
 ORDER_PULLED = 5
-ORDER_COMPLETED = 6
+ORDER_SENDING = 6
+ORDER_COMPLETED = 7
 
 
 class Order(models.Model):
@@ -28,6 +32,7 @@ class Order(models.Model):
 	address = models.ForeignKey(Ship)
 	expect_time = models.IntegerField(default=0)
 	leave_msg = models.CharField(max_length=255)
+	qr_storage_pre = models.CharField(max_length=255)
 	status = models.IntegerField(default=ORDER_CREATED)
 	created_at = models.DateTimeField(auto_now_add=True)
 
@@ -39,10 +44,13 @@ class Order(models.Model):
 
 	def create_order(self):
 		try:
+			self.qr_storage_pre = '%s%s' % (HOST_URL, '/media/qrcode/')
 			self.save()
 			order_record = OrderRecord()
 			order_record.order_id = self
 			order_record.save()
+			qr_url = '%s%s/%sorders/%s%s' % (HTTP_SCHEMA, HOST_URL, API_VERSION, str(self.id), '?operation=send')
+			generate_qrcode(qr_url, str(self.id)+'.jpg')
 			return True
 		except Exception, e:
 			print(e)
@@ -54,6 +62,11 @@ class Order(models.Model):
 			return True
 		except:
 			return False
+
+	def to_dict(self):
+		order_dict = model_to_dict(self, exclude=['qr_storage_pre'])
+		order_dict['qr_storage_url'] = self.qr_storage_pre+str(self.id)+'.jpg'
+		return order_dict
 
 
 class OrderRecord(models.Model):

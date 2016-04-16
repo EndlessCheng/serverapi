@@ -9,7 +9,7 @@ from core.jsonresponse import *
 reg_subject = u'[顺道儿]邮件验证'
 
 
-def customer(request, customer_id=None):
+def customers(request, customer_id=None):
 	if request.method == 'POST':
 		return post_customer(request)
 	elif request.method == 'GET':
@@ -28,13 +28,13 @@ def get_customer(request, customer_id=None):
 			content['status'] = 201
 			content['msg'] = u'验证成功'
 			return create_simple_response(201, json.dumps(content))
+		else:
+			content = customer.to_dict()
+			return create_simple_response(200, json.dumps(content))
 	except:
 		content['status'] = 404
 		content['msg'] = '未找到'
 		return create_simple_response(404, json.dumps(content))
-	else:
-		content = customer.to_dict()
-		return create_simple_response(200, json.dumps(content))
 
 
 def post_customer(request):

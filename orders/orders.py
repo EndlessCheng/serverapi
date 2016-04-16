@@ -10,7 +10,9 @@ def orders(request, order_id=None):
 	if request.method == 'POST':
 		return post_orders(request, order_id)
 	elif request.method == 'GET':
-		return create_simple_response(200, 'hi')
+		return get_orders(request, order_id)
+	elif request.method == 'PATCH':
+		return patch_orders(request, order_id)
 	else:
 		pass
 
@@ -53,7 +55,36 @@ def post_orders(request, order_id=None):
 
 def get_orders(request, order_id=None):
 	if order_id is None:
-		# return all orders...
-		pass
+		return create_simple_response(200, 'HI')
 	else:
+		order = Order.objects.get(id=int(order_id))
+		order_dict = order.to_dict()
+		return create_simple_response(200, json.dumps(order_dict))
+
+
+def patch_orders(request, order_id):
+	content = dict()
+	patch_data = json.loads(request.body)
+
+	try:
+		order_status_new = patch_data.get('new_status', None)
+	except:
+		content['status'] = 406
+		content['msg'] = u'Request格式有误'
+		return create_simple_response(406, json.dumps(content))
+
+	try:
 		order = Order.objects.get(id=order_id)
+	except:
+		content['status'] = 404
+		content['msg'] = u'资源未找到'
+		return create_simple_response(404, json.dumps(content))
+
+	if order.update_order_state(order_status_new):
+		order = Order.objects.get(id=order_id)
+		order_dict = order.to_dict()
+		return create_simple_response(200, json.dumps(order_dict))
+	else:
+		content['status'] = 500
+		content['msg'] = u'操作失败,服务端存储出现异常'
+		return create_simple_response(500, json.dumps(content))
