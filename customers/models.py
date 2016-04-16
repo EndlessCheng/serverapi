@@ -1,4 +1,7 @@
+from django.utils import timezone
 from django.db import models
+
+ISOTIMEFORMAT = '%Y-%m-%d %X'
 
 
 # Create your models here.
