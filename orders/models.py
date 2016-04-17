@@ -20,6 +20,7 @@ ORDER_COMPLETED = 7
 class Order(models.Model):
 	customer_id = models.ForeignKey(Customer)
 	canteen_id = models.ForeignKey(Canteen)
+	window_id = models.ForeignKey(Window)
 	combo_id = models.CharField(max_length=255)
 	nowa_id = models.IntegerField(default=0)    # 当天订单id,每天从1自增
 	product_list = models.CharField(max_length=255)
@@ -76,14 +77,86 @@ class OrderRecord(models.Model):
 	receive_time = models.DateTimeField(blank=True)
 	push_time = models.DateTimeField(blank=True)
 	pull_time = models.DateTimeField(blank=True)
+	send_time = models.DateTimeField(blank=True)
 	finish_time = models.DateTimeField(blank=True)
 	deliver_id = models.ForeignKey(Customer, blank=True)
+
+	def update_order_state(self, status, order_deliver_id=None):
+		if status == ORDER_PAYED:
+			return self.append_payment_time()
+		elif status == ORDER_RECEIVED:
+			return self.append_receive_time()
+		elif status == ORDER_PUSHED:
+			return self.append_push_time()
+		elif status == ORDER_PULLED:
+			deliver = Customer.objects.get(id=order_deliver_id)
+			if self.append_pull_time():
+				return self.append_deliver(deliver)
+			else:
+				return False
+		elif status == ORDER_SENDING:
+			deliver = Customer.objects.get(id=order_deliver_id)
+			if self.append_send_time():
+				return self.append_deliver(deliver)
+			else:
+				return False
+		elif status == ORDER_COMPLETED:
+			return self.append_finish_time()
+		else:
+			return False
 
 	def append_payment_time(self):
 		try:
 			# local_time = time.strftime(ISOTIMEFORMAT, time.localtime())
-			print(timezone.now())
 			OrderRecord.objects.filter(order_id=self.order_id).update(payment_time=timezone.now())
+			return True
+		except Exception, e:
+			print(e)
+			return False
+
+	def append_pull_time(self):
+		try:
+			OrderRecord.objects.filter(order_id=self.order_id).update(pull_time=timezone.now())
+			return True
+		except Exception, e:
+			print(e)
+			return False
+
+	def append_receive_time(self):
+		try:
+			OrderRecord.objects.filter(order_id=self.order_id).update(receive_time=timezone.now())
+			return True
+		except Exception, e:
+			print(e)
+			return False
+
+	def append_push_time(self):
+		try:
+			OrderRecord.objects.filter(order_id=self.order_id).update(push_time=timezone.now())
+			return True
+		except Exception, e:
+			print(e)
+			return False
+
+	def append_send_time(self):
+		try:
+			OrderRecord.objects.filter(order_id=self.order_id).update(send_time=timezone.now())
+			return True
+		except Exception, e:
+			print(e)
+			return False
+
+	def append_finish_time(self):
+		try:
+			OrderRecord.objects.filter(order_id=self.order_id).update(finish_time=timezone.now())
+			return True
+		except Exception, e:
+			print(e)
+			return False
+
+	def append_deliver(self, deliver):
+		try:
+			OrderRecord.objects.filter(order_id=self.order_id).update(deliver_id=deliver)
 			return True
 		except Exception, e:
 			print(e)
