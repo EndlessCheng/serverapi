@@ -2,6 +2,8 @@
 
 import json
 
+from django.http import HttpRequest
+
 from models import *
 from util.response_util import *
 from util.models_util import OrderUtils
@@ -75,8 +77,16 @@ def get_orders(request, order_id=None):
 		return create_simple_response(200, content)
 	else:
 		order = Order.objects.get(id=int(order_id))
-		order_dict = order.to_dict()
-		return create_simple_response(200, json.dumps(order_dict))
+		order_record = OrderRecord.objects.get(order_id=order.id)
+		if order.update_order_state(ORDER_PULLED) and \
+			order_record.update_order_state(ORDER_PULLED):
+			order_dict = order.to_dict()
+			return create_simple_response(200, json.dumps(order_dict))
+		else:
+			content = dict()
+			content['status'] = 500
+			content['msg'] = u'操作失败,服务端存储出现异常'
+			return create_simple_response(500, json.dumps(content))
 
 
 def patch_orders(request, order_id):

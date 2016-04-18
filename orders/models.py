@@ -89,11 +89,14 @@ class OrderRecord(models.Model):
 		elif status == ORDER_PUSHED:
 			return self.append_push_time()
 		elif status == ORDER_PULLED:
-			deliver = Customer.objects.get(id=order_deliver_id)
-			if self.append_pull_time():
-				return self.append_deliver(deliver)
+			if order_deliver_id is not None:
+				deliver = Customer.objects.get(id=order_deliver_id)
+				if self.append_pull_time():
+					return self.append_deliver(deliver)
+				else:
+					return False
 			else:
-				return False
+				return self.append_pull_time()
 		elif status == ORDER_SENDING:
 			deliver = Customer.objects.get(id=order_deliver_id)
 			if self.append_send_time():
