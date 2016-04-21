@@ -9,14 +9,16 @@ import json
 class TestOrders(unittest.TestCase):
     def setUp(self):
         self.test_data = dict()
-        self.test_data['cateen_id'] = '001'
-        self.test_data['product_list'] = 'id2_id4_id1'
-        self.test_data['product_price'] = '15.00'
-        self.test_data['ship_price'] = '2.00'
-        self.test_data['promotion'] = '3.00'
-        self.test_data['total_price'] = '14'
-        self.test_data['if_self_help'] = '0'
-        self.test_data['expect_time'] = '30'
+        self.test_data['cateen_id'] = 1
+        self.test_data['customer_id'] = 1
+        self.test_data['window_id'] = 1
+        self.test_data['product_list'] = '1_3_4'
+        self.test_data['product_price'] = 9
+        self.test_data['ship_price'] = 0
+        self.test_data['promotion'] = 0
+        self.test_data['total_price'] = 9
+        self.test_data['if_self_help'] = 1
+        self.test_data['expect_time'] = 0
         self.test_data['leave_msg'] = 'leave_msg'
         self.test_data_urlencode = urllib.urlencode(self.test_data)
         self.requrl = 'http://api.byway.net.cn/v1/orders'
