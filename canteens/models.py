@@ -36,6 +36,10 @@ class Product(models.Model):
 	sold_num = models.IntegerField(default=0)
 
 
+class HeatProduct(models.Model):
+	product_id = models.ForeignKey(Product)
+
+
 class WindowComment(models.Model):
 	customer_id = models.ForeignKey(Customer)
 	window_id = models.ForeignKey(Window)
