@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'djcelery',
     'kombu.transport.django',
+    'icelery',
     'customers',
     'canteens',
     'orders',
@@ -98,7 +99,7 @@ import djcelery
 
 djcelery.setup_loader()
 BROKER_URL = 'redis://localhost:6379/10'
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/10'
 
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
