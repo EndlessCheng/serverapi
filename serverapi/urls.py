@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.conf import settings
 
 from icelery.views import *
+from canteens.products import *
 
 
 admin.autodiscover()
@@ -18,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^v1/customers/', include('customers.urls')),
     url(r'^v1/orders/', include('orders.urls')),
     url(r'^v1/payments/', include('payments.urls')),
+    url(r'^v1/heatproducts/', heatgoods),
                        url(r'^testcelery/', get),
 )
 
