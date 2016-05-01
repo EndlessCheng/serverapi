@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.forms.models import model_to_dict
 
 from customers.models import *
 
@@ -34,6 +35,10 @@ class Product(models.Model):
 	score = models.FloatField(default=5)
 	unit = models.CharField(max_length=10, default=u'个')
 	sold_num = models.IntegerField(default=0)
+
+	def to_dict(self):
+		product_dict = model_to_dict(self)
+		return product_dict
 
 
 class HeatProduct(models.Model):
