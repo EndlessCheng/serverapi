@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^v1/orders/', include('orders.urls')),
     url(r'^v1/payments/', include('payments.urls')),
     url(r'^v1/heatproducts/', heatgoods),
+    url(r'^v1/products/(?P<product_id>\w+)/$', products),
                        url(r'^testcelery/', get),
 )
 
