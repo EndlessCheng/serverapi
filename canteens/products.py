@@ -15,3 +15,14 @@ def heatgoods(request):
 			heat_products.append(product.to_dict())
 
 		return create_simple_response(200, json.dumps(heat_products))
+
+
+def products(request, product_id=None):
+	if request.method == 'GET':
+		try:
+			product = Product.objects.get(id=int(product_id))
+			return create_simple_response(200, json.dumps(product.to_dict()))
+		except:
+			content = dict()
+			content['msg'] = 'resource not found'
+			return create_simple_response(404, json.dumps(content))
