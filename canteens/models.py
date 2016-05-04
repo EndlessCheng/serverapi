@@ -20,6 +20,9 @@ class Window(models.Model):
 	score = models.FloatField(default=5)
 	sold_num = models.IntegerField(default=0)
 
+	def to_dict(self):
+		return model_to_dict(self)
+
 
 class Category(models.Model):
 	name = models.CharField(max_length=100)

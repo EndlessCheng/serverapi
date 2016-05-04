@@ -6,6 +6,7 @@ from django.conf import settings
 
 from icelery.views import *
 from canteens.products import *
+from canteens.views import *
 
 
 admin.autodiscover()
@@ -15,6 +16,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'serverapi.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
+    url(r'^$', home),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^v1/customers/', include('customers.urls')),
     url(r'^v1/orders/', include('orders.urls')),
