@@ -13,13 +13,18 @@ def home(request, canteen_id=None):
 			canteen_id = DEFAULT_CANTEEN_ID
 
 		if canteen_id:
+			canteen_data = dict()
 			window_list = []
+			now_canteen = Canteen.objects.get(id=canteen_id)
 			now_windows = Window.objects.filter(canteen_id=canteen_id)
 
 			for window in now_windows:
 				window_list.append(window.to_dict())
 
-			return create_simple_response(200, json.dumps(window_list))
+			canteen_data = now_canteen.to_dict()
+			canteen_data['windows_data'] = window_list
+
+			return create_simple_response(200, json.dumps(canteen_data))
 		else:
 			content = dict()
 			content['msg'] = 'resource not found'

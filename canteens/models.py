@@ -12,6 +12,9 @@ class Canteen(models.Model):
 	address = models.CharField(max_length=255)
 	status = models.IntegerField(default=1)
 
+	def to_dict(self):
+		return model_to_dict(self)
+
 
 class Window(models.Model):
 	name = models.CharField(max_length=100)
