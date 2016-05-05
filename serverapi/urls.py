@@ -7,6 +7,7 @@ from django.conf import settings
 from icelery.views import *
 from canteens.products import *
 from canteens.views import *
+from canteens.canteens import *
 
 
 admin.autodiscover()
@@ -17,7 +18,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^v1/home/$', home),
-    url(r'^v1/canteens/$', home),
+    url(r'^v1/canteens/$', canteens),
     url(r'^v1/canteens/(?P<canteen_id>\w+)/$', home),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^v1/customers/', include('customers.urls')),

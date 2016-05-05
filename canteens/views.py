@@ -12,7 +12,7 @@ def home(request, canteen_id=None):
 		if canteen_id is None:
 			canteen_id = DEFAULT_CANTEEN_ID
 
-		if canteen_id:
+		try:
 			canteen_data = dict()
 			window_list = []
 			now_canteen = Canteen.objects.get(id=canteen_id)
@@ -25,7 +25,7 @@ def home(request, canteen_id=None):
 			canteen_data['windows_data'] = window_list
 
 			return create_simple_response(200, json.dumps(canteen_data))
-		else:
+		except:
 			content = dict()
 			content['msg'] = 'resource not found'
 			return create_simple_response(404, json.dumps(content))
