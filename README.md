@@ -9,8 +9,16 @@
 5. 运行脚本startserver.sh或执行python manage.py runserver 0.0.0.0:8000(推荐执行startserver.sh)
 6. 退出用ctrl+c
 
+<<<<<<< HEAD
 ### 架构设计、编码规范、简洁开发流程等参见Wiki  
 [Serverapi WIKI](https://github.com/carpaanddonkey/serverapi/wiki)  
+=======
+### Celery相关
+1. 启动Celery worker: python manage.py celery worker --loglevel=info
+2. 启动Celery beat(用于定时任务): python manage.py celery beat
+
+### 架构设计、简洁开发流程参见Wiki  
+>>>>>>> edcf09260f8fe106cac54e9e6e0547134a678636
 [ServerAPI顺道儿服务架构设计](https://github.com/carpaanddonkey/serverapi/wiki/ServerAPI顺道儿服务架构设计)
 
 @ByWay 
