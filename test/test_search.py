@@ -3,11 +3,12 @@ import unittest
 import urllib2
 import json
 
+
 class TestSearch(unittest.TestCase):
     def setUp(self):
         self.requrl = 'http://api.byway.net.cn/v1/search/?query_param=米'
 
-    def testHeatProducts(self):
+    def testSearch(self):
         self.req = urllib2.Request(self.requrl)
         self.response = urllib2.urlopen(self.req)
         self.response = json.loads(self.response.read())

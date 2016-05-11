@@ -2,6 +2,7 @@ import unittest
 import urllib2
 import json
 
+
 class TestCanteens(unittest.TestCase):
     def setUp(self):
         self.requrlhome = 'http://api.byway.net.cn/v1/home/'

@@ -2,6 +2,7 @@ import unittest
 import urllib2
 import json
 
+
 class TestHeatProducts(unittest.TestCase):
     def setUp(self):
         self.requrl = 'http://api.byway.net.cn/v1/heatproducts/'
