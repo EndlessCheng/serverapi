@@ -8,7 +8,7 @@ class TestCanteens(unittest.TestCase):
         self.requrlbyid = 'http://api.byway.net.cn/v1/canteens/1/'
         self.requrlcanteens = 'http://api.byway.net.cn/v1/canteens/'
 
-    def testHeatProducts(self):
+    def testCanteens(self):
         self.req = urllib2.Request(self.requrlhome)
         self.response = urllib2.urlopen(self.req)
         self.response = json.loads(self.response.read())
