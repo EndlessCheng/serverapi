@@ -5,9 +5,9 @@ import json
 
 class TestCanteens(unittest.TestCase):
     def setUp(self):
-        self.requrlhome = 'http://api.byway.net.cn/v1/home/'
-        self.requrlbyid = 'http://api.byway.net.cn/v1/canteens/1/'
-        self.requrlcanteens = 'http://api.byway.net.cn/v1/canteens/'
+        self.requrlhome = 'http://api.shundaoer.net.cn/v1/home/'
+        self.requrlbyid = 'http://api.shundaoer.net.cn/v1/canteens/1/'
+        self.requrlcanteens = 'http://api.shundaoer.net.cn/v1/canteens/'
 
     def testCanteens(self):
         self.req = urllib2.Request(self.requrlhome)

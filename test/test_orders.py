@@ -23,7 +23,7 @@ class TestOrders(unittest.TestCase):
         self.test_data['leave_msg'] = 'leave_msg'
         self.test_data_urlencode = urllib.urlencode(self.test_data)
         # self.requrl = 'http://115.159.208.167/v1/orders'
-        self.requrl = 'http://api.byway.net.cn/v1/orders/'
+        self.requrl = 'http://api.shundaoer.net.cn/v1/orders/'
 
     def testOrder(self):
         self.req = urllib2.Request(url=self.requrl, data=json.dumps(self.test_data))

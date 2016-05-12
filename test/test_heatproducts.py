@@ -5,7 +5,7 @@ import json
 
 class TestHeatProducts(unittest.TestCase):
     def setUp(self):
-        self.requrl = 'http://api.byway.net.cn/v1/heatproducts/'
+        self.requrl = 'http://api.shundaoer.net.cn/v1/heatproducts/'
 
     def testHeatProducts(self):
         self.req = urllib2.Request(self.requrl)

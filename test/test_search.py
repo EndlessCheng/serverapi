@@ -6,7 +6,7 @@ import json
 
 class TestSearch(unittest.TestCase):
     def setUp(self):
-        self.requrl = 'http://api.byway.net.cn/v1/search/?query_param=米'
+        self.requrl = 'http://api.shundaoer.net.cn/v1/search/?query_param=米'
 
     def testSearch(self):
         self.req = urllib2.Request(self.requrl)
