@@ -46,4 +46,5 @@ def post_login(request):
 
 @login_required
 def test_session(request):
-	return create_simple_response(200, json.dumps({'name': 'test'}))
+	user = authenticate(username='13301052@bjtu.edu.cn', password='123')
+	return create_simple_response(200, json.dumps({'id': user.id, 'name': user.username}))
