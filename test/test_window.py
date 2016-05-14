@@ -7,7 +7,7 @@ import json
 class TestSearch(unittest.TestCase):
 
     def setUp(self):
-        self.requrl = 'http://api.byway.net.cn/v1/windows/1/'
+        self.requrl = 'http://api.shundaoer.net.cn/v1/windows/1/'
 
     def testWindow(self):
         self.req = urllib2.Request(self.requrl)
