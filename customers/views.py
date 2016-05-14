@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required
 
 from util.response_util import *
+from models import *
 
 
 # Create your views here.
@@ -48,3 +49,10 @@ def post_login(request):
 def test_session(request):
 	user = authenticate(username='13301052@bjtu.edu.cn', password='123')
 	return create_simple_response(200, json.dumps({'id': user.id, 'name': user.username}))
+
+
+@login_required
+def user_info(request):
+	if request.method == 'GET':
+		current_customer = Customer.objects.get(mail=request.user.email)
+		return create_simple_response(200, json.dumps(current_customer.to_dict()))

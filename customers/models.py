@@ -13,6 +13,7 @@ class Customer(models.Model):
 	mail = models.CharField(max_length=40)
 	phone = models.CharField(max_length=20)
 	name = models.CharField(max_length=50)
+	icon = models.CharField(default='/media/usericon/default.jpg', max_length=100)
 	password = models.CharField(max_length=50)
 	score = models.IntegerField(default=0)
 	token = models.CharField(max_length=255, null=True)
@@ -48,6 +49,7 @@ class Customer(models.Model):
 		customer_dict['name'] = self.name
 		customer_dict['mail'] = self.mail
 		customer_dict['phone'] = self.phone
+		customer_dict['icon'] = self.icon
 		customer_dict['score'] = self.score
 		customer_dict['token'] = self.token
 		customer_dict['status'] = self.status
