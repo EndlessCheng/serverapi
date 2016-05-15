@@ -57,6 +57,7 @@ def test_session(request):
 def user_info(request):
 	if request.method == 'GET':
 		# 防止一个诡异的错误
+		return create_simple_response(200, json.dumps({'email':request.user.email}))
 		if not request.user.email:
 			return redirect(settings.LOGIN_URL)
 		current_customer = Customer.objects.get(mail=request.user.email)
