@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^v1/heatproducts/', heatgoods),
     url(r'^v1/products/(?P<product_id>\w+)/$', products),
     url(r'^v1/search/$', search),
+    url(r'^v1/user/$', user_info),
                        url(r'^testcelery/', get),
                        url(r'^testsession/', test_session),
 )
