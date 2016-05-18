@@ -74,6 +74,7 @@ def get_orders(request, order_id=None):
 			order_list = order_utils.get_order_by_deliver(canteen_id, expect_status)
 			content = order_utils.orders_to_array(order_list)
 		else:
+			content = []
 			pass
 
 		return create_simple_response(200, content)
