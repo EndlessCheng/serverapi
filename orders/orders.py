@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import json
-
-from django.http import HttpRequest
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login as auth_login
 
 from models import *
 from util.response_util import *
@@ -20,13 +20,14 @@ def orders(request, order_id=None):
 		pass
 
 
+@login_required
 def post_orders(request, order_id=None):
 	order_data = json.loads(request.body)
 
 	order = Order()
 	content = dict()
 	try:
-		order.customer_id = Customer.objects.get(id=order_data.get('customer_id', None))
+		order.customer_id = Customer.objects.get(id=request.user.id)
 		order.canteen_id = Canteen.objects.get(id=order_data.get('cateen_id', None))
 		order.window_id = Window.objects.get(id=order_data.get('window_id', None))
 		order.product_list = order_data.get('product_list', None)
@@ -57,6 +58,7 @@ def post_orders(request, order_id=None):
 		return create_simple_response(500, json.dumps(content))
 
 
+@login_required
 def get_orders(request, order_id=None):
 	if order_id is None:
 		query_type = request.GET.get('query_type', None)
@@ -89,6 +91,7 @@ def get_orders(request, order_id=None):
 			return create_simple_response(500, json.dumps(content))
 
 
+@login_required
 def patch_orders(request, order_id):
 	content = dict()
 	patch_data = json.loads(request.body)
