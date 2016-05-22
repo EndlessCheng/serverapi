@@ -62,6 +62,7 @@ def post_orders(request, order_id=None):
 @login_required
 def get_orders(request, order_id=None):
 	r = redis.Redis(connection_pool=RConnectionPool())
+	content = []
 	if order_id is None:
 		query_type = request.GET.get('query_type', None)
 		order_utils = OrderUtils()
@@ -69,7 +70,6 @@ def get_orders(request, order_id=None):
 			window_id = request.GET.get('window_id', None)
 			expect_status = request.GET.get('expect_status', None)
 			query_key = 'order:w'+str(window_id)+':s'+str(expect_status)
-			content = []
 
 			# from redis
 			order_list = r.smembers(query_key)
@@ -86,39 +86,56 @@ def get_orders(request, order_id=None):
 		elif query_type == 'deliver':
 			canteen_id = request.GET.get('canteen_id', None)
 			expect_status = ORDER_PUSHED
-			order_list = order_utils.get_order_by_deliver(canteen_id, expect_status)
-			content = order_utils.orders_to_array(order_list)
+			query_key = 'order:c'+str(canteen_id)+':s'+str(expect_status)
+
+			# from redis
+			order_list = r.smembers(query_key)
+			for order in order_list:
+				content.append(eval(order))
+
+			# from db
+			if not content:
+				order_list = order_utils.get_order_by_deliver(canteen_id, expect_status)
+				content = order_utils.orders_to_array(order_list)
+				for order in order_list:
+					r.sadd(query_key, order.to_dict())
 		else:
 			content = []
 			pass
 
 		return create_simple_response(200, json.dumps(content))
 	else:
-		order = Order.objects.get(id=int(order_id))
-		order_record = OrderRecord.objects.get(order_id=order.id)
-		if order.update_order_state(ORDER_PULLED) and \
-			order_record.update_order_state(ORDER_PULLED):
-			order_dict = order.to_dict()
-			return create_simple_response(200, json.dumps(order_dict))
+		# from redis
+		order = r.hgetall('order:'+str(order_id))
+
+		if order:
+			return create_simple_response(200, json.dumps(order))
+
+		# from db
 		else:
-			content = dict()
-			content['status'] = 500
-			content['msg'] = u'操作失败,服务端存储出现异常'
-			return create_simple_response(500, json.dumps(content))
+			order = Order.objects.get(id=int(order_id))
+			r.hmset('order:'+str(order_id), order.to_dict())
+		return create_simple_response(200, json.dumps(order.to_dict()))
 
 
 @login_required
 def patch_orders(request, order_id):
+	r = redis.Redis(connection_pool=RConnectionPool())
 	content = dict()
 	patch_data = json.loads(request.body)
+	order_status_new = None
+	order_deliver = None
 
 	try:
 		order_status_new = patch_data.get('new_status', None)
-		order_deliver = patch_data.get('deliver_id', None)
+		# order_deliver = patch_data.get('deliver_id', None)
 	except:
 		content['status'] = 406
 		content['msg'] = u'Request格式有误'
 		return create_simple_response(406, json.dumps(content))
+
+	if order_status_new:
+		order_deliver = request.user.id
 
 	try:
 		order = Order.objects.get(id=order_id)
@@ -131,6 +148,8 @@ def patch_orders(request, order_id):
 	if order.update_order_state(order_status_new) and order_record.update_order_state(order_status_new, order_deliver):
 		order = Order.objects.get(id=order_id)
 		order_dict = order.to_dict()
+
+		r.delete('order:'+str(order_id))
 	else:
 		content['status'] = 500
 		content['msg'] = u'操作失败,服务端存储出现异常'
