@@ -3,16 +3,25 @@ import json
 
 from models import *
 from util.response_util import *
+from util.redis_util import *
 
 
 def heatgoods(request):
 	if request.method == 'GET':
-		heat_goods = HeatProduct.objects.all()
+		r = redis.Redis(connection_pool=RConnectionPool())
+
+		heat_goods = r.smembers('heat_products')
 		heat_products = []
 
 		for good in heat_goods:
-			product = good.product_id
-			heat_products.append(product.to_dict())
+			heat_products.append(eval(good))
+
+		if not heat_products:
+			heat_goods = HeatProduct.objects.all()
+			for good in heat_goods:
+				product = good.product_id
+				heat_products.append(product.to_dict())
+				r.sadd('heat_products', product.to_dict())
 
 		return create_simple_response(200, json.dumps(heat_products))
 

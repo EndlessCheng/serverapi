@@ -1,6 +1,7 @@
 # self definition
 .idea/
 test/yhn_test.py
+dump.rdb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

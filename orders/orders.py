@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from models import *
 from util.response_util import *
 from util.models_util import OrderUtils
+from util.redis_util import *
 
 
 def orders(request, order_id=None):
@@ -60,14 +61,28 @@ def post_orders(request, order_id=None):
 
 @login_required
 def get_orders(request, order_id=None):
+	r = redis.Redis(connection_pool=RConnectionPool())
 	if order_id is None:
 		query_type = request.GET.get('query_type', None)
 		order_utils = OrderUtils()
 		if query_type == 'window':
 			window_id = request.GET.get('window_id', None)
 			expect_status = request.GET.get('expect_status', None)
-			order_list = order_utils.get_order_by_window(window_id, expect_status)
-			content = order_utils.orders_to_array(order_list)
+			query_key = 'order:w'+str(window_id)+':s'+str(expect_status)
+			content = []
+
+			# from redis
+			order_list = r.smembers(query_key)
+			for order in order_list:
+				content.append(eval(order))
+
+			# from db
+			if not content:
+				order_list = order_utils.get_order_by_window(window_id, expect_status)
+				content = order_utils.orders_to_array(order_list)
+				for order in order_list:
+					r.sadd(query_key, order.to_dict())
+
 		elif query_type == 'deliver':
 			canteen_id = request.GET.get('canteen_id', None)
 			expect_status = ORDER_PUSHED
@@ -77,7 +92,7 @@ def get_orders(request, order_id=None):
 			content = []
 			pass
 
-		return create_simple_response(200, content)
+		return create_simple_response(200, json.dumps(content))
 	else:
 		order = Order.objects.get(id=int(order_id))
 		order_record = OrderRecord.objects.get(order_id=order.id)

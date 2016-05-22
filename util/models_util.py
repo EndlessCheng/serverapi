@@ -19,4 +19,4 @@ class OrderUtils(object):
 		order_arr = []
 		for order in order_list:
 			order_arr.append(order.to_dict())
-		return json.dumps(order_arr)
+		return order_arr
